@@ -5,7 +5,7 @@ import re
 # Get a personal access token from github
 from p_token import personal_token
 
-pattern = "Review vote:([\s,a-z, :, +, - ]*)"
+pattern = "Review vote:([\s,a-z, :, +, - ,👍,❤️,👎, 😕 ]*)\n"
 
 # or using an access token
 g = Github(personal_token)
@@ -28,10 +28,10 @@ for issue in open_issues:
         if comment.user.login not in ("canyon289"):
             d["reviewer"] = comment.user.login
             d["body"] = comment.body 
-            vote = re.match(pattern, comment.body)
+            vote = re.search(pattern, comment.body)
 
             if vote is not None:
-                d["vote"] = vote[0]
+                d["vote"] = vote.groups()[0].rstrip()
             else:
                 d["vote"] = vote
             print(vote)
