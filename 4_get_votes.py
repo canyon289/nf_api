@@ -1,4 +1,5 @@
 from github import Github
+import ipdb
 import pandas as pd
 import re
 
@@ -19,15 +20,16 @@ open_issues = repo.get_issues(state='open')
 rows = []
 
 for issue in open_issues:
-    d = {} 
-    d["title"] = issue.title
-    d["issue_number"] = issue.number
 
     for comment in issue.get_comments():
 
+        d = {} 
+        d["title"] = issue.title
+        d["issue_number"] = issue.number
+
         if comment.user.login not in ("canyon289"):
             d["reviewer"] = comment.user.login
-            d["body"] = comment.body 
+            # d["body"] = comment.body 
             vote = re.search(pattern, comment.body)
 
             if vote is not None:
@@ -40,3 +42,5 @@ for issue in open_issues:
 
 df = pd.DataFrame(rows)
 df.to_excel("Reviews.xlsx")
+print("Review Counts")
+print(df["title"].value_counts().sort_index())
