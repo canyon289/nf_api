@@ -6,7 +6,7 @@ import re
 # Get a personal access token from github
 from p_token import personal_token
 
-pattern = "Review vote:([\s,a-z, :, +, - ,👍,❤️,👎, 😕 ]*)\n"
+pattern = "Review vote:([\s,a-z, :, +, - ,👍,❤️,👎, 😕, 1-9]*)\n"
 
 # or using an access token
 g = Github(personal_token)
@@ -40,7 +40,17 @@ for issue in open_issues:
 
             rows.append(d)
 
-df = pd.DataFrame(rows)
-df.to_excel("Reviews.xlsx")
+# Replace emojis with numbers
+
+
+writer = pd.ExcelWriter('Reviews.xlsx', engine='xlsxwriter')
+
+long_df = pd.DataFrame(rows)
+long_df.to_excel(writer, sheet_name='long')
+# df2.to_excel(writer, sheet_name='Sheet2')
+
+
+writer.save()
+
 print("Review Counts")
-print(df["title"].value_counts().sort_index())
+print(long_df["title"].value_counts().sort_index())
