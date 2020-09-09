@@ -29,7 +29,7 @@ for issue in open_issues:
 
         if comment.user.login not in ("canyon289"):
             d["reviewer"] = comment.user.login
-            # d["body"] = comment.body 
+            d["body"] = comment.body 
             vote = re.search(pattern, comment.body)
 
             if vote is not None:
