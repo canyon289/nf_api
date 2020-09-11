@@ -8,15 +8,16 @@ from p_token import personal_token
 
 numerical_conversion = {
                         # These are two different hearts even though they look the same
-                        "❤":2,
-                        "❤️":2,
-                        ":heart:":-1,
-                        "👍":1,
-                        ":thumbsup:":-1,
-                        "👎":-1,
-                        ":thumbsdown:":-1,
-                        "😕":-2,
-                        ":frowning_face:":-2
+                        "❤":3,
+                        "❤️":3,
+                        ":heart:":3,
+                        "👍":2,
+                        ":+1:":2,
+                        ":thumbsup:":2,
+                        "👎":1,
+                        ":thumbsdown:":1,
+                        "😕":0,
+                        ":frowning_face:":0
                         }
 
 
@@ -63,8 +64,15 @@ writer = pd.ExcelWriter('Reviews.xlsx', engine='xlsxwriter')
 
 long_df.to_excel(writer, sheet_name='long')
 # df2.to_excel(writer, sheet_name='Sheet2')
+wide_df = long_df.pivot(index="title", columns="reviewer", values="NumericalScale")
+# For some reason I have to do this the janky way with my version of pandas
+
+for index, row in wide_df.iterrows():
+    wide_df.loc[index, "mean"] = row.mean()
+    wide_df.loc[index, "median"] = row.median()
 
 
+wide_df.to_excel(writer, sheet_name='wide')
 writer.save()
 
 print("Review Counts")
